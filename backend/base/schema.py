@@ -1,9 +1,10 @@
 import graphene
 from graphene_django import DjangoObjectType
 from .models import Product
-from graphql.execution.base import ResolveInfo
-from graphql_auth.bases import Output
-from graphene_file_upload.scalars import Upload
+
+# from graphql.execution.base import ResolveInfo
+# from graphql_auth.bases import Output
+# from graphene_file_upload.scalars import Upload
 
 # from .forms import CreateCompanyMutationForm
 
@@ -38,3 +39,6 @@ class ProductInput(graphene.InputObjectType):
 class CreateProduct(graphene.Mutation):
     class Arguments:
         product_data = ProductInput(required=True)
+
+
+schema = graphene.Schema(query=Query)

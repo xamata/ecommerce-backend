@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "graphene_django",
     "base.apps.BaseConfig",
+    # "graphql_auth",
 ]
 
 MIDDLEWARE = [
