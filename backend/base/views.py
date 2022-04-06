@@ -5,10 +5,10 @@ from .products import products
 # Create your views here.
 def getRoutes(request):
     routes = [
-        "/api/products/",
-        "/api/products/create",
-        "/api/products/upload/",
-        "/api/products/<id>/reviews",
+        "/base/products/",
+        "/base/products/create",
+        "/base/products/upload/",
+        "/base/products/<id>/reviews",
     ]
     return JsonResponse(routes, safe=False)
 
