@@ -1,3 +1,4 @@
+from itertools import product
 import graphene
 from graphene_django import DjangoObjectType
 from .models import Product
@@ -22,7 +23,7 @@ class Query(graphene.ObjectType):
     def resolve_all_products(self, info, **kwargs):
         return Product.objects.all()
 
-    def resolve_book(self, info, product_id):
+    def resolve_product(self, info, product_id):
         return Product.objects.get(pk=product_id)
 
 
@@ -40,5 +41,47 @@ class CreateProduct(graphene.Mutation):
     class Arguments:
         product_data = ProductInput(required=True)
 
+    product = graphene.Field(ProductType)
 
-schema = graphene.Schema(query=Query)
+    # mutator to add to the database
+    @staticmethod
+    def mutate(root, info, product_data=None):
+        product_instance = Product(
+            title=product_data.title,
+            author=product_data.author,
+            year_published=product_data.year_published,
+            review=product_data.review,
+        )
+        product_instance.save()
+        # use CreateProduct class to save a new product
+        return CreateProduct(product=product_instance)
+
+
+class UpdateProduct(graphene.Mutation):
+    class Arguments:
+        product_data = ProductInput(required=True)
+
+    product = graphene.Field(ProductType)
+
+    @staticmethod
+    def mutate(root, info, product_data=None):
+        product_instance = product.objects.get(pk=product_data.id)
+
+        if product_instance:
+            product_instance.name = product_data.name
+            product_instance.author = product_data.author
+            product_instance.year_published = product_data.year_published
+            product_instance.review = product_data.review
+            product_instance.save()
+
+            return UpdateProduct(product=product_instance)
+        return UpdateProduct(product=None)
+
+
+class Mutation(graphene.ObjectType):
+    update_book = UpdateProduct.Field()
+    create_book = CreateProduct.Field()
+    # delete_book = DeleteBook.Field()
+
+
+schema = graphene.Schema(query=Query, mutation=Mutation)
