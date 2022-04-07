@@ -4,7 +4,7 @@ from django.db import models
 # Create your models here.
 class Product(models.Model):
     name = models.CharField(max_length=200, null=True, blank=True)
-    brand = models.CharField(max_length=200, null=True, blank=True)
+    brand = models.CharField(default="MaxMata", max_length=200, null=True, blank=True)
     image = models.ImageField(null=True, blank=True)
     category = models.CharField(max_length=200, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
@@ -14,6 +14,9 @@ class Product(models.Model):
     countInStock = models.IntegerField(null=True, blank=True, default=0)
     createdAt = models.DateTimeField(auto_now_add=True)
     _id = models.AutoField(primary_key=True, editable=False)
+    url = models.CharField(
+        default="http://127.0.0.1:8000/images", max_length=200, blank=True
+    )
 
     def __str__(self):
         return self.name

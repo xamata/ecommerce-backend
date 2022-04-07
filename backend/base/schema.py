@@ -30,11 +30,13 @@ class Query(graphene.ObjectType):
 class ProductInput(graphene.InputObjectType):
     id = graphene.ID()
     name = graphene.String()
+    image = graphene.String()
     brand = graphene.String()
     category = graphene.String()
     description = graphene.String()
     price = graphene.Decimal()
     countInStock = graphene.Int()
+    url = graphene.String()
 
 
 class CreateProduct(graphene.Mutation):
@@ -78,10 +80,25 @@ class UpdateProduct(graphene.Mutation):
         return UpdateProduct(product=None)
 
 
+class DeleteBook(graphene.Mutation):
+    # DeleteBook uses graphene.ID to remove the book from db
+    class Arguments:
+        id = graphene.ID()
+
+    product = graphene.Field(ProductType)
+
+    @staticmethod
+    def mutate(root, info, id):
+        product_instance = Product.objects.get(pk=id)
+        product_instance.delete()
+
+        return None
+
+
 class Mutation(graphene.ObjectType):
     update_book = UpdateProduct.Field()
     create_book = CreateProduct.Field()
-    # delete_book = DeleteBook.Field()
+    delete_book = DeleteBook.Field()
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)
