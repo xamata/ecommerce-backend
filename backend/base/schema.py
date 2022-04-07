@@ -81,7 +81,7 @@ class UpdateProduct(graphene.Mutation):
 
 
 class DeleteBook(graphene.Mutation):
-    # DeleteBook uses graphene.ID to remove the book from db
+    # DeleteBook uses graphene.ID to remove the product from db
     class Arguments:
         id = graphene.ID()
 
@@ -91,7 +91,6 @@ class DeleteBook(graphene.Mutation):
     def mutate(root, info, id):
         product_instance = Product.objects.get(pk=id)
         product_instance.delete()
-
         return None
 
 
